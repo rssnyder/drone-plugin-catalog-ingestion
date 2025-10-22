@@ -1,5 +1,6 @@
 from os import getenv
 from sys import exit
+from json import loads
 
 from requests import post
 
@@ -64,11 +65,34 @@ def main():
     url = check_env("PLUGIN_HARNESS_URL", "https://app.harness.io")
     token = check_env("PLUGIN_HARNESS_PLATFORM_API_KEY")
     account_id = check_env("PLUGIN_HARNESS_ACCOUNT_ID")
+
     mode = check_env("PLUGIN_MODE")
     entity_ref = check_env("PLUGIN_ENTITY_REF")
-    properties = check_env("PLUGIN_PROPERTIES", {})
     prefix = check_env("PLUGIN_PREFIX", "")
+    if not prefix.endswith("."):
+        prefix += "."
 
+    property = check_env("PLUGIN_PROPERTY", "")
+    value = check_env("PLUGIN_VALUE", "")
+
+    properties = loads(check_env("PLUGIN_PROPERTIES", "{}"))
+
+    payload = {
+        "entity_ref": entity_ref
+    }
+
+    if properties:
+        payload["properties"] = [
+            {"property": prefix + property, "value": value, "mode": mode}
+            for property, value in properties.items()
+        ]
+    elif property:
+        payload["properties"] = [
+            {"property": prefix + property, "value": value, "mode": mode}
+        ]
+    else:
+        raise ValueError("No PROPERTIES or PROPERTY provided")
+    
     resp = post(
         f"{url}/v1/catalog/custom-properties/entity?dry_run=false",
         headers={
@@ -76,13 +100,7 @@ def main():
             "Harness-Account": account_id,
             "x-api-key": token,
         },
-        json={
-            "entity_ref": entity_ref,
-            "properties": [
-                {"property": prefix + property, "value": value, "mode": mode}
-                for property, value in properties.items()
-            ],
-        },
+        json=payload,
     )
 
     resp.raise_for_status()
@@ -90,6 +108,8 @@ def main():
     write_outputs(
         {"status": resp.json().get("status", "unknown"), "response": resp.status_code}
     )
+
+    print(resp.text)
 
 
 if __name__ == "__main__":
