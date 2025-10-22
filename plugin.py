@@ -66,7 +66,7 @@ def main():
     token = check_env("PLUGIN_HARNESS_PLATFORM_API_KEY")
     account_id = check_env("PLUGIN_HARNESS_ACCOUNT_ID")
 
-    mode = check_env("PLUGIN_MODE")
+    mode = check_env("PLUGIN_MODE", "append")
     entity_ref = check_env("PLUGIN_ENTITY_REF")
     prefix = check_env("PLUGIN_PREFIX", "")
     if not prefix.endswith("."):
