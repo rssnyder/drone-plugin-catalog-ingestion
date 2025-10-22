@@ -2,6 +2,19 @@
 
 update idp catalog properties in harness pipelines
 
+you can set multiple properties in a single step by using `PLUGIN_PROPERTIES` set to a json mapping of property names to values
+
+```json
+{
+    "some_key": "some_value",
+    "some_other_key": "some_other_value"
+}
+```
+
+you can also set single keys by using `PLUGIN_PROPERTY` and `PLUGIN_VALUE`
+
+to set all keys under a common prefix, use `PLUGIN_PREFIX`, for example `metadata.custom_properties`
+
 ## environment variables
 
 - `PLUGIN_HARNESS_URL`: harness url (default: `https://app.harness.io`)
