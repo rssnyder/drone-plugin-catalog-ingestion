@@ -20,12 +20,16 @@ to set all keys under a common prefix, use `PLUGIN_PREFIX`, for example `metadat
 - `PLUGIN_HARNESS_URL`: harness url (default: `https://app.harness.io`)
 - `PLUGIN_HARNESS_PLATFORM_API_KEY`: harness platform api key
 - `PLUGIN_HARNESS_ACCOUNT_ID`: harness account id
+
 - `PLUGIN_MODE`: mode to use when updating properties (default: `append`)
 - `PLUGIN_ENTITY_REF`: entity ref to update properties for
 - `PLUGIN_PREFIX`: prefix to use when updating properties (example: `metadata.custom_properties`)
+
 - `PLUGIN_PROPERTY`: property to update (optional, required if `PLUGIN_PROPERTIES` is not set)
 - `PLUGIN_VALUE`: value to update property to (optional, required if `PLUGIN_PROPERTY` is set)
+
 - `PLUGIN_PROPERTIES`: properties to update (optional, required if `PLUGIN_PROPERTY` is not set)
+- `PLUGIN_SUB_PROPERTIES`: sub property to access from `PLUGIN_PROPERTIES` to use for update (optional)
 
 ## usage
 

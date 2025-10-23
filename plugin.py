@@ -76,12 +76,18 @@ def main():
     value = check_env("PLUGIN_VALUE", "")
 
     properties = loads(check_env("PLUGIN_PROPERTIES", "{}"))
+    sub_properties = check_env("PLUGIN_SUB_PROPERTIES", "")
 
-    payload = {
-        "entity_ref": entity_ref
-    }
+    payload = {"entity_ref": entity_ref}
 
     if properties:
+        # unpack properties to find nested properties we need
+        if sub_properties:
+            properties_copy = properties.copy()
+            for prop in sub_properties.split("."):
+                properties_copy = properties_copy[prop]
+            properties = properties_copy
+
         payload["properties"] = [
             {"property": prefix + property, "value": value, "mode": mode}
             for property, value in properties.items()
@@ -92,7 +98,7 @@ def main():
         ]
     else:
         raise ValueError("No PROPERTIES or PROPERTY provided")
-    
+
     resp = post(
         f"{url}/v1/catalog/custom-properties/entity?dry_run=false",
         headers={
